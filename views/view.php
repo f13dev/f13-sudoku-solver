@@ -1,20 +1,33 @@
 <?php namespace F13\SudokuSolver\Views;
 
-use function PHPSTORM_META\map;
-
 class View
 {
+    public $label_clear;
+    public $label_load_demo;
+    public $label_solve;
+
     public function __construct($params = array())
     {
+        $this->label_clear = __('Clear', 'f13-sudoku-solver');
+        $this->label_load_demo = __('Load demo', 'f13-sudoku-solver');
+        $this->label_solve = __('Solve', 'f13-sudoku-solver');
+
         foreach ($params as $k => $v) {
             $this->{$k} = $v;
         }
     }
 
+    /**
+     * Wraps content in a container
+     * 
+     * @param String $c Input HTML
+     * 
+     * @return String Output HTML
+     */
     public function _container($c)
     {
         $v = '<div style="position: relative">';
-            $v .= '<div id="f13-sudoku-solver-container" style="width: 344px; margin: auto;">';
+            $v .= '<div id="f13-sudoku-solver-container">';
                 $v .= $c;
             $v .= '</div>';
         $v .= '</div>';
@@ -22,33 +35,39 @@ class View
         return $v;
     }
 
+    /**
+     * Generate the solver HTML
+     * 
+     * @return String Output HTML
+     */
     public function solver()
     {
         $v = '<form method="post" class="f13-sudoku-ajax" data-target="f13-sudoku-solver-container" data-url="'.admin_url('admin-ajax.php').'">';
             $v .= '<input type="hidden" name="submit" value="1">';
             $v .= '<input type="hidden" name="action" value="f13-sudoku-solver">';
-            $v .= '<table class="f13-sudoku-solver-table" cellspacing="0" style="border: 1px solid #ccc;">';
+            $v .= '<table class="f13-sudoku-solver-table" cellspacing="0">';
                 for ($y = 1; $y <= 9; $y++) {
-                    $v .= '<tr style="padding: 0 !important">';
+                    $v .= '<tr>';
                         for ($x = 1; $x <= 9; $x++) {
-                            $style = '';
+                            $class = '';
                             if ($y == 3 || $y == 6) {
-                                $style .= 'border-bottom: 1px solid #222; ';
+                                $class .= 'border-bottom ';
                             } else 
                             if ($y == 4 || $y == 7) {
-                                $style .= 'border-top: 1px solid #222; ';
+                                $class .= 'border-top ';
                             }
                             if ($x == 3 || $x == 6) {
-                                $style .= 'border-right: 1px solid #222; ';
+                                $class .= 'border-right ';
                             } else 
                             if ($x == 4 || $x == 7) {
-                                $style .= 'border-left: 1px solid #222; ';
+                                $class .= 'border-left ';
                             }
 
                             $orig = false; 
                             if ($this->solved) {
                                 $val = $this->solved[$y][$x];
                                 $orig = $this->solved[$y][$x] == $this->sudoku[$y][$x];
+                                $class .= ($orig) ? 'original-value ' : '';
                             } else {
                                 $val = (
                                     is_array($this->sudoku) &&
@@ -59,18 +78,18 @@ class View
                             }
                             $name = 'sudoku['.$y.']['.$x.']';
                             
-                            $v .= '<td style="border:1px solid #ddd; padding: 0 !important; height: 30px; width: 30px; '.$style.' background: '.($orig && $val ? '#ccffcc;' : '#fff').'">'; 
-                                $v .= '<input type="text" min="0" max="9" name="'.$name.'" style="width:30px; height: 30px; border: 0; font-size: 24px; background: transparent;" value="'.$val.'"  >';
+                            $v .= '<td class="'.$class.'">'; 
+                                $v .= '<input type="text" min="0" max="9" name="'.$name.'" value="'.$val.'"  >';
                             $v .= '</td>';
                         }
                     $v .= '</tr>';
                 }
             $v .= '</table>';
             $v .= $this->msg;
-            $v .= '<input type="submit" value="Solve" class="f13-sudoku-solver-submit">';
+            $v .= '<input type="submit" value="'.$this->label_solve.'" class="f13-sudoku-solver-submit">';
         $v .= '</form>';
 
-        $v .= '<form method="post" class="f13-sudoku-ajax" data-target="f13-sudoku-solver-container" data-url="'.admin_url('admin-ajax.php').'" style="width: calc(50% - 5px); display: inline-block; margin-right: 10px;">';
+        $v .= '<form method="post" class="f13-sudoku-ajax f13-sudoku-solver-form-first-half" data-target="f13-sudoku-solver-container" data-url="'.admin_url('admin-ajax.php').'">';
             $v .= '<input type="hidden" name="action" value="f13-sudoku-solver">';
             $v .= '<input type="hidden" name="submit" value="0">';
             $arr = array(
@@ -140,12 +159,12 @@ class View
                 }
             }
 
-            $v .= '<input type="submit" value="Load demo" class="f13-sudoku-solver-submit">';
+            $v .= '<input type="submit" value="'.$this->label_load_demo.'" class="f13-sudoku-solver-submit">';
         $v .= '</form>';
 
-        $v .= '<form method="post" class="f13-sudoku-ajax" data-target="f13-sudoku-solver-container" data-url="'.admin_url('admin-ajax.php').'" style="width: calc(50% - 5px); display: inline-block;">';
+        $v .= '<form method="post" class="f13-sudoku-ajax f13-sudoku-solver-form-second-half" data-target="f13-sudoku-solver-container" data-url="'.admin_url('admin-ajax.php').'">';
             $v .= '<input type="hidden" name="action" value="f13-sudoku-solver">';
-            $v .= '<input type="submit" value="Clear" class="f13-sudoku-solver-submit">';
+            $v .= '<input type="submit" value="'.$this->label_clear.'" class="f13-sudoku-solver-submit">';
         $v .= '</form>';
         
         return ($this->container) ? $this->_container($v) : $v;

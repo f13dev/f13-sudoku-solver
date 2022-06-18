@@ -7,6 +7,11 @@
     backdrop-filter: blue(4px);
 }
 
+#f13-sudoku-solver-container {
+    width: 344px;
+    margin: auto;
+}
+
 .f13-sudoku-solver-submit {
     width: 100%;
     padding: 5px;
@@ -14,4 +19,76 @@
     border: 2px solid #ccc;
     cursor: pointer;
     margin-top: 10px;
+}
+
+.f13-sudoku-solver-table {
+    border: 2px solid #ccc;
+    margin-bottom: 0px;
+}
+
+.f13-sudoku-solver-table tr {
+    padding: 0 !important;
+}
+
+.f13-sudoku-solver-table tr td {
+    border: 1px solid #ddd;
+    padding: 0 !important;
+    height: 30px;
+    width: 30px;
+    background: #fff;
+}
+
+.f13-sudoku-solver-table tr td.border-right {
+    border-right: 1px solid #222;
+}
+
+.f13-sudoku-solver-table tr td.border-left {
+    border-left: 1px solid #222;
+}
+
+.f13-sudoku-solver-table tr td.border-top {
+    border-top: 1px solid #222;
+}
+
+.f13-sudoku-solver-table tr td.border-bottom {
+    border-bottom: 1px solid #222;
+}
+
+.f13-sudoku-solver-table tr td.original-value {
+    background: #ccffcc;
+}
+
+.f13-sudoku-solver-table tr td input {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    font-size: 24px;
+    background: transparent;
+}
+
+.f13-sudoku-solver-form-first-half {
+    width: calc(50% - 5px);
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.f13-sudoku-solver-form-second-half {
+    width: calc(50% - 5px);
+    display: inline-block;
+}
+
+.f13-sudoku-solver-notice {
+    padding: 5px; 
+    margin: 10px 0px 0px;
+    text-align: center;
+    border: 2px solid #ccc;
+    background: #ffcccc;
+}
+
+.fully_solved {
+    background: #ccffcc;
+}
+
+.partially_solved {
+    background: #ffbd33;
 }

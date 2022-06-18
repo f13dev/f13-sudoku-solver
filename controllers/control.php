@@ -10,20 +10,28 @@ class Control
         add_shortcode('sudoku-solver', array($this, 'solver'));
     }
 
+    /**
+     * Format a text message and mode into a RAG formatted message
+     * 
+     * @param String $msg Notification text
+     * @param String $mode Message type
+     * 
+     * @return String HTML formatted notification message
+     */
     public function _msg($msg, $mode)
     {
-        switch ($mode) {
-            case 'fully_solved': $style = 'background: #ccffcc;'; break;
-            case 'partially_solved': $style = 'background: #FFBD33;'; break;
-            default: $style = 'background: #ffcccc;';
-        }
-        $v = '<div style="padding: 5px; margin: 10px 0px 0px; text-align: center; border: 2px solid #ccc; '.$style.'">';
+        $v = '<div class="f13-sudoku-solver-notice '.esc_attr($mode).'">';
             $v .= $msg;
         $v .= '</div>';
 
         return $v;
     }
 
+    /**
+     * Sudoku solver shortcode
+     * 
+     * @return String HTML formatted Sudoku solver
+     */
     public function solver() 
     {
         $submit = (int) filter_input($this->request_method, 'submit');
@@ -44,24 +52,24 @@ class Control
                 $solved = $resp['resp'];
                 if ($resp['mode'] == 'fully_solved') {
                     $msg = $this->_msg(
-                        sprintf(__('Puzzle solved in %d milliseconds.'), $resp['time']),
+                        sprintf(__('Puzzle solved in %d milliseconds.', 'f13-sudoku-solver'), $resp['time']),
                         $resp['mode'], 
                     );
                 } else 
                 if ($resp['mode'] == 'partially_solved') {
                     $msg = $this->_msg(
-                        sprintf(__('Puzzle partially solved in %d milliseconds.'), $resp['time']),
+                        sprintf(__('Puzzle partially solved in %d milliseconds.', 'f13-sudoku-solver'), $resp['time']),
                         $resp['mode'], 
                     );
                 } else {
                     $msg = $this->_msg(
-                        sprintf(__('Puzzle could not be solved - taking %d milliseconds'), $resp['time']),
+                        sprintf(__('Puzzle could not be solved - taking %d milliseconds', 'f13-sudoku-solver'), $resp['time']),
                         $resp['mode'],
                     );
                 }
             } else {
                 $msg = $this->_msg(
-                    __('This puzzle is not valid, please check you have entered the numbers correctly'),
+                    __('This puzzle is not valid, please check you have entered the numbers correctly', 'f13-sudoku-solver'),
                     'unsolved',
                 );
             }

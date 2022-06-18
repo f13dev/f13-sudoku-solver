@@ -2,11 +2,11 @@
 
 class Model
 {
-    public $x;  // x axis
-    public $y;  // y axis
-    public $c;  // cubes
-    public $p;  // puzzle
-    public $s;  // solved
+    private $x;  // x axis
+    private $y;  // y axis
+    private $c;  // cubes
+    private $p;  // puzzle
+    private $s;  // solved
 
     public function __construct($sudoku)
     {
@@ -17,6 +17,12 @@ class Model
         $this->_set_c();
     }
 
+    /**
+     * Validate a puzzle by checking for mutliple instances of n
+     * in a column, row or square
+     * 
+     * @return Bool Validated
+     */
     public function validate_puzzle()
     {
         // Check that each number appears only once in rows
@@ -67,6 +73,16 @@ class Model
         return true;
     }
 
+    /**
+     * Get the X Y coordinates from a cell within a square
+     * 
+     * @param Int $cube Numeric cube identifier
+     * @param Int $cell Numeric cell identifier
+     * 
+     * @return Array
+     *     Int x column coordinate
+     *     Int y row coordinate
+     */
     public function _get_yx_from_c($cube, $cell)
     {
         switch ($cube) {
@@ -98,6 +114,23 @@ class Model
         );
     }
 
+    /**
+     * Get the square and cell identifier from an Y, X coordinate
+     * 
+     * @param Int $y Y coordinate
+     * @param Int $x X coordinate
+     * 
+     * @return Array
+     *     Int cube Cube identifier
+     *     Int cell Cell identifier
+     *     Array columns
+     *         Int Columns that pass through square
+     *     Array rows
+     *         Int Rows that pass through square
+     *     Array cells
+     *         Int y Cell y position
+     *         Int x Cell x position
+     */
     public function _get_c_id($y, $x)
     {
         switch ($y) {
@@ -145,6 +178,11 @@ class Model
         );
     }
 
+    /**
+     * Check if a puzzle is solved
+     * 
+     * @return Bool Puzzle is solved
+     */
     public function is_solved()
     {
         for ($y = 1; $y <= 9; $y++) {
@@ -155,6 +193,9 @@ class Model
         return true;
     }
 
+    /**
+     * Set the locally stored x axis array
+     */
     public function _set_x()
     {
         $this->x = array();
@@ -165,11 +206,17 @@ class Model
         }
     }
 
+    /**
+     * Set the locally stored y axis array
+     */
     public function _set_y()
     {
         $this->y = $this->p;
     }
 
+    /**
+     * Set the locally stored square array
+     */
     public function _set_c()
     {
         $this->c = array();
@@ -181,6 +228,14 @@ class Model
         }
     }
 
+    /**
+     * Find possible numbers for each empty cell
+     * 
+     * @return Array
+     *     Int y => Array
+     *         Int x => Array
+     *             Int Possible number for cell
+     */
     public function _get_possible()
     {
         $possible = array();
@@ -205,6 +260,9 @@ class Model
         return $possible;
     }
 
+    /**
+     * Sets a cell that has been found
+     */
     public function _set_s_cell($y, $x, $n) 
     {
         $this->s[$y][$x] = $n;
@@ -214,6 +272,11 @@ class Model
         $this->c[$c['cube']][$c['cell']] = $n;
     }
 
+    /**
+     * Checks for any cells with only one possible value
+     * 
+     * @param Array $possible
+     */
     public function _check_possible_single($possible)
     {
         foreach ($possible as $y => $ya) {
@@ -231,6 +294,11 @@ class Model
         }
     }
 
+    /**
+     * Checks for any Columns where a possible number shows only once
+     * 
+     * @param Array $possible
+     */
     public function _check_possible_y($possible)
     {
         // Check if only one instance of n exists for row
@@ -261,6 +329,11 @@ class Model
         }
     }
 
+    /**
+     * Check for any squares where a possible number shows only once
+     * 
+     * @param Array $possible
+     */
     public function _check_possible_c($possible) 
     {
         foreach ($possible as $y => $ya) {
@@ -292,6 +365,11 @@ class Model
         }
     }
 
+    /**
+     * Check for any columns where a possible number shows only once
+     * 
+     * @param Array $possible
+     */
     public function _check_possible_x($possible)
     {
         // Create X Y array from Y X array
@@ -329,6 +407,15 @@ class Model
         }
     }
 
+    /**
+     * Solve the loaded puzzle
+     * 
+     * @return Array
+     *     Array resp The solved puzzle
+     *     String mode The completion mode
+     *     Int iteration The number of iterations for completing the puzzle
+     *     Int time Completion time in milliseconds
+     */
     public function solve()
     {
         $start = floor(microtime(true) * 1000);

@@ -2,11 +2,11 @@
 
 class Model
 {
-    private $columns;  // x axis
-    private $rows;  // y axis
-    private $squares;  // cubes
-    private $puzzle;  // puzzle
-    private $solved;  // solved
+    private $columns;
+    private $rows; 
+    private $squares;
+    private $puzzle;
+    private $solved;
 
     public function __construct($sudoku)
     {
@@ -18,14 +18,12 @@ class Model
     }
 
     /**
-     * Validate a puzzle by checking for mutliple instances of n
-     * in a column, row or square
+     * Validate rows within a puzzle, checking for duplicate numbers
      * 
      * @return Bool Validated
      */
-    public function validate_puzzle()
+    public function _validate_rows()
     {
-        // Check that each number appears only once in rows
         foreach ($this->rows as $row) {
             for ($number = 1; $number <= 9; $number++) {
                 $count = 0;
@@ -40,7 +38,16 @@ class Model
             }
         }
 
-        // Check that each number appears only once in cols
+        return true;
+    }
+
+    /**
+     * Validate columns within a puzzle, checking for duplicate numbers
+     * 
+     * @return Bool Validated
+     */
+    public function _validate_columns()
+    {
         foreach ($this->columns as $column) {
             for ($number = 1; $number <= 9; $number++) {
                 $count = 0;
@@ -55,7 +62,16 @@ class Model
             }
         }
 
-        // Check that each number appears only once in cubes
+        return true;
+    }
+
+    /**
+     * Validate squares within a puzzle, checking for duplicate numbers
+     * 
+     * @return Bool Validated
+     */
+    public function _validate_squares() 
+    {
         foreach ($this->squares as $square) {
             for ($number = 1; $number <= 9; $number++) {
                 $count = 0;
@@ -71,6 +87,21 @@ class Model
         }
 
         return true;
+    }
+
+    /**
+     * Validate a puzzle by checking for mutliple instances of n
+     * in a column, row or square
+     * 
+     * @return Bool Validated
+     */
+    public function validate_puzzle()
+    {
+        return (
+            $this->_validate_columns() &&
+            $this->_validate_rows() &&
+            $this->_validate_squares()
+        );
     }
 
     /**
@@ -277,8 +308,9 @@ class Model
      * 
      * @param Array $possible
      */
-    public function _check_possible_single($possible)
+    public function _check_possible_single()
     {
+        $possible = $this->_get_possible();
         foreach ($possible as $row => $columns) {
             foreach ($columns as $column => $numbers) {
                 // Check if there is only one possible answer for cell
@@ -299,8 +331,9 @@ class Model
      * 
      * @param Array $possible
      */
-    public function _check_possible_in_row($possible)
+    public function _check_possible_in_row()
     {
+        $possible = $this->_get_possible();
         // Check if only one instance of n exists for row
         for ($row = 1; $row <= 9; $row++) {
             if (!array_key_exists($row, $possible)) {
@@ -334,8 +367,9 @@ class Model
      * 
      * @param Array $possible
      */
-    public function _check_possible_in_square($possible) 
+    public function _check_possible_in_square() 
     {
+        $possible = $this->_get_possible();
         foreach ($possible as $row => $columns) {
             foreach ($columns as $column => $cells) {
                 $square = $this->_get_square_from_row_column($row, $column);
@@ -370,8 +404,9 @@ class Model
      * 
      * @param Array $possible
      */
-    public function _check_possible_in_column($possible)
+    public function _check_possible_in_column()
     {
+        $possible = $this->_get_possible();
         // Create X Y array from Y X array
         $possible_row = array();
         foreach ($possible as $row => $columns) {
@@ -421,18 +456,10 @@ class Model
         $start = floor(microtime(true) * 1000);
         for ($i = 1; $i <= 1000; $i++) {
             $pre_solved = $this->solved;
-            $this->_check_possible_single(
-                $this->_get_possible()
-            );
-            $this->_check_possible_in_row(
-                $this->_get_possible()
-            );
-            $this->_check_possible_in_column(
-                $this->_get_possible()
-            );
-            $this->_check_possible_in_square(
-                $this->_get_possible()
-            );
+            $this->_check_possible_single();
+            $this->_check_possible_in_column();
+            $this->_check_possible_in_row();
+            $this->_check_possible_in_square();
 
             if ($this->is_solved()) {
                 $end = floor(microtime(true) * 1000);

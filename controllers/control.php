@@ -75,11 +75,15 @@ class Control
             }
         }
 
+        $dm = new \F13\SudokuSolver\Models\Demo();
+        $demo_puzzles = $dm->demo_puzzles();
+
         $v = new \F13\SudokuSolver\Views\View(array(
             'msg' => $msg,
             'container' => $container,
             'sudoku' => $sudoku,
             'solved' => $solved,
+            'demo_puzzles' => $demo_puzzles,
         ));
 
         return $v->solver();

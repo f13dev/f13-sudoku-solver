@@ -32,17 +32,6 @@ class Plugin
 
     public static function load()
     {
-        //$ver  = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'js/data.js' ));
-        //wp_enqueue_script( 'f13-data', plugins_url( 'js/data.js', __FILE__ ), array('jquery'), $ver );
-        //wp_localize_script( 'f13-data', 'ajax_url', admin_url('admin-ajax.php') );
-        //wp_enqueue_script('basictable', F13_DATA_URL.'inc/reflowtable/js/reflow-table.min.js', array('jquery'));
-
-        //$ver  = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'css/data.css' ));
-        //wp_enqueue_style('f13-data', plugins_url( 'css/data.css', __FILE__ ), array(), $ver);
-        //$ver  = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'css/data-charts.css' ));
-        //wp_enqueue_style('f13-data-charts', plugins_url( 'css/data-charts.css', __FILE__ ), array(), $ver);
-        //wp_enqueue_style('basictable', F13_DATA_URL.'inc/reflowtable/css/reflow-table.min.css');
-    
         wp_enqueue_script('f13-sudoku-solver', F13_SUDOKU_SOLVER_URL.'js/f13-sudoku-solver.js', array('jquery'), F13_SUDOKU_SOLVER['Version']);
         wp_enqueue_style('f13-sudoku-solver', F13_SUDOKU_SOLVER_URL.'css/f13-sudoku-solver.css', array(), F13_SUDOKU_SOLVER['Version']);
     }
